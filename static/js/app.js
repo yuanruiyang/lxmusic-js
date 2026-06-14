@@ -302,6 +302,57 @@ function updateWarningBanners() {
     if (lbBanner) lbBanner.classList.toggle('hidden', hasEnabledSources);
 }
 
+// ============ 插件设置 ============
+
+async function loadConfig() {
+    try {
+        const result = await apiGet('/config');
+        if (result.code === 0 && result.data) {
+            const cfg = result.data;
+            // 填充平台 checkbox
+            const container = document.getElementById('cfgPlatforms');
+            if (container) {
+                const boxes = container.querySelectorAll('input[type="checkbox"]');
+                boxes.forEach(cb => {
+                    cb.checked = Array.isArray(cfg.defaultPlatforms) && cfg.defaultPlatforms.includes(cb.value);
+                });
+            }
+            // 填充音质
+            const qualityEl = document.getElementById('cfgQuality');
+            if (qualityEl && cfg.defaultQuality) {
+                qualityEl.value = cfg.defaultQuality;
+            }
+        }
+    } catch (e) {
+        console.warn('加载配置失败:', e);
+    }
+}
+
+async function saveConfig() {
+    const container = document.getElementById('cfgPlatforms');
+    const platforms = [];
+    if (container) {
+        container.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => {
+            platforms.push(cb.value);
+        });
+    }
+    if (platforms.length === 0) {
+        showSnackbar('至少选择一个平台', 'warning');
+        return;
+    }
+    const quality = document.getElementById('cfgQuality')?.value || '320k';
+    try {
+        const result = await apiPost('/config', { defaultPlatforms: platforms, defaultQuality: quality });
+        if (result.code === 0) {
+            showSnackbar('设置已保存', 'success');
+        } else {
+            showSnackbar('保存失败: ' + (result.msg || '未知错误'), 'error');
+        }
+    } catch (e) {
+        showSnackbar('保存失败: ' + e.message, 'error');
+    }
+}
+
 // ============ 音源管理 ============
 
 function applySourcesResponse(data) {
@@ -904,6 +955,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPlatforms();
     loadPlaylists();
     checkSourceStatus();
+    loadConfig();
 
     // 导入音源文件
     document.getElementById('importBtn').addEventListener('click', () => {
@@ -924,6 +976,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 删除所有音源
     document.getElementById('deleteAllSourcesBtn').addEventListener('click', deleteAllSources);
+
+    // 保存插件设置
+    document.getElementById('cfgSaveBtn').addEventListener('click', saveConfig);
 
     // 搜索
     document.getElementById('searchBtn').addEventListener('click', () => {
