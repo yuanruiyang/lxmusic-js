@@ -440,6 +440,86 @@ export function registerSearchHandlers(
     return successResponse(responseData);
   });
 
+  // ===== TopOne 外部搜索接口（MIoT 兼容） =====
+  // POST /api/search/topone — 一次返回搜索结果 + 播放 URL
+  // body: { keyword, hint?: {title, artist, duration}, quality?, source? }
+  // 返回: { code, msg, data: { title, artist, album, duration, cover_url, url, source_data } }
+
+  router.post('/api/search/topone', async (req: HTTPRequest) => {
+    const body = parseBody(req);
+    const keyword = String(body.keyword || '').trim();
+    if (!keyword) {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: 400, msg: 'keyword is required', data: null }),
+      };
+    }
+
+    const quality = String(body.quality || '320k').trim();
+    const sourceFilter = String(body.source || '').trim();
+
+    // 确定要搜索的平台列表
+    let platforms: string[];
+    if (sourceFilter) {
+      platforms = [sourceFilter];
+    } else {
+      platforms = registry.all() as unknown as string[];
+    }
+
+    for (const platform of platforms) {
+      const searcher = registry.get(platform);
+      if (!searcher) continue;
+
+      try {
+        const result = await searcher.search(keyword, 1, 5);
+        const items: Record<string, unknown>[] =
+          ((result as any)?.list || (result as any)?.songs || []) as Record<string, unknown>[];
+
+        for (const item of items) {
+          const sr = toSearchResultItem(item, platform, quality);
+          if (!sr) continue;
+
+          // 构造 songInfo 用于获取播放 URL
+          const sd = sr.source_data as unknown as LxSourceData;
+          try {
+            const url = await runtimeManager.getMusicUrl(platform, quality, sd.songInfo);
+            if (url) {
+              songloft.log.info(`[TopOne] "${keyword}" → ${sr.title} - ${sr.artist} (${platform})`);
+              return {
+                statusCode: 200,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  code: 0,
+                  msg: 'success',
+                  data: {
+                    title: sr.title,
+                    artist: sr.artist,
+                    album: sr.album,
+                    duration: sr.duration,
+                    cover_url: sr.cover_url,
+                    url,
+                    source_data: sr.source_data,
+                  },
+                }),
+              };
+            }
+          } catch {
+            // 单条失败，继续尝试下一条
+          }
+        }
+      } catch (e: any) {
+        songloft.log.warn(`[TopOne] platform ${platform} search failed: ${e.message || e}`);
+      }
+    }
+
+    return {
+      statusCode: 200,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: 404, msg: 'No results with playable URL', data: null }),
+    };
+  });
+
   // ===== Direct 接口:供 lxmusic-api 等使用 platform 原始字段的插件调用 =====
   // 不接受 source_data,直接用 songInfo+quality 调底层 musicsdk。
   // 这些接口形态保持不变,跟 source_data 重构正交。
