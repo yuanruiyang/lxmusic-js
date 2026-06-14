@@ -98,9 +98,54 @@
         </div>
     </div>
 
-    <!-- Tab 2: 音源管理 -->
+    <!-- Tab 2: 设置 -->
     <div class="tab-content" id="tab-sources">
         <div class="container">
+
+            <!-- 插件设置卡片 -->
+            <div class="card">
+                <div class="card-header">插件设置</div>
+                <p class="card-desc">配置默认搜索平台和音质，外部调用（MIoT）的 topone 接口将使用此处设置</p>
+
+                <div class="settings-section">
+                    <div class="settings-label">默认搜索平台</div>
+                    <div class="settings-platforms" id="cfgPlatforms">
+                        <label class="md-checkbox">
+                            <input type="checkbox" value="kg" checked>
+                            <span>酷狗 (kg)</span>
+                        </label>
+                        <label class="md-checkbox">
+                            <input type="checkbox" value="kw" checked>
+                            <span>酷我 (kw)</span>
+                        </label>
+                        <label class="md-checkbox">
+                            <input type="checkbox" value="tx" checked>
+                            <span>QQ (tx)</span>
+                        </label>
+                        <label class="md-checkbox">
+                            <input type="checkbox" value="wy" checked>
+                            <span>网易 (wy)</span>
+                        </label>
+                        <label class="md-checkbox">
+                            <input type="checkbox" value="mg" checked>
+                            <span>咪咕 (mg)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-label">默认音质</div>
+                    <select id="cfgQuality" class="select-field" style="max-width:200px">
+                        <option value="128k">128k</option>
+                        <option value="320k" selected>320k</option>
+                        <option value="flac">FLAC</option>
+                    </select>
+                </div>
+
+                <div style="margin-top:16px">
+                    <button id="cfgSaveBtn" class="btn-filled">保存设置</button>
+                </div>
+            </div>
 
             <div class="card">
                 <div class="card-header">
