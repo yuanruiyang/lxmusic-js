@@ -630,7 +630,7 @@ function renderResults() {
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
         return `
-            <div class="result-item${selectedClass}${playingClass}" data-index="${i}">
+            <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
                     onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
                 <div class="result-thumb">${imgHtml}</div>
@@ -1438,7 +1438,7 @@ function slRenderGrid() {
             ? `<img class="songlist-cover" src="${escapeHtml(item.img)}" alt="" loading="lazy" onerror="this.style.display='none'">`
             : '<div class="songlist-cover" style="display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:40px;color:var(--md-outline)">queue_music</span></div>';
         return `
-            <div class="songlist-card" data-index="${i}" onclick="slOpenDetail('${escapeHtml(item.id)}')">
+            <div class="songlist-card animate-slide-up" data-index="${i}" onclick="slOpenDetail('${escapeHtml(item.id)}')" style="animation-delay:${Math.min(i, 12) * 0.05}s">
                 ${img}
                 <div class="songlist-card-body">
                     <div class="songlist-name">${escapeHtml(item.name)}</div>
@@ -1599,7 +1599,7 @@ function slRenderDetailList() {
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (currentPlaySong && getSongKey(song) === getSongKey(currentPlaySong) && isPlaying) ? 'pause' : 'play_arrow';
         return `
-            <div class="result-item${selectedClass}${playingClass}" data-index="${i}">
+            <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <input type="checkbox" class="sl-detail-checkbox" data-index="${i}" ${checked}
                     onchange="slOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
                 <div class="result-thumb">${imgHtml}</div>
@@ -2006,7 +2006,7 @@ function srRenderResults() {
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
         return `
-            <div class="result-item${selectedClass}${playingClass}" data-index="${i}">
+            <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
                     onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
                 <div class="result-thumb">${imgHtml}</div>
@@ -2554,7 +2554,7 @@ function lbRenderList() {
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (lbCurrentSong && getSongKey(song) === getSongKey(lbCurrentSong) && lbIsPlaying) ? 'pause' : 'play_arrow';
         return `
-            <div class="result-item${selectedClass}${playingClass}" data-index="${i}">
+            <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <input type="checkbox" class="lb-checkbox" data-index="${i}" ${checked}
                     onchange="lbOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
                 <div class="result-thumb">${imgHtml}</div>
