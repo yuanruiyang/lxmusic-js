@@ -30,10 +30,27 @@ function getPlatformName(source) {
 }
 
 function getQualityLabel(quality) {
-    if (!quality) return '320k';
-    const q = quality.toLowerCase();
-    if (q === 'flac' || q === 'ape' || q === 'wav') return 'Hi-Res';
+    if (!quality) return '';
+    const q = (typeof quality === 'string') ? quality.toLowerCase() : String(quality).toLowerCase();
+    if (q === 'flac' || q === 'ape' || q === 'wav' || q === 'dsd' || q === 'hi-res') return 'Hi-Res';
+    if (q === '320k' || q === '320') return '320k';
+    if (q === '128k' || q === '128') return '128k';
     return quality;
+}
+
+function getBestQuality(song) {
+    // 从 song.types 数组中获取最高可用音质
+    if (Array.isArray(song.types) && song.types.length > 0) {
+        const priority = ['flac', 'ape', 'wav', 'dsd', '320k', '320', '192k', '128k', '128'];
+        const typeValues = song.types.map(t => (typeof t === 'string' ? t : t.type || '').toLowerCase());
+        for (const q of priority) {
+            if (typeValues.includes(q)) return q;
+        }
+        return typeValues[0];
+    }
+    // 回退到 song.quality 字段
+    if (song.quality) return song.quality;
+    return '320k';
 }
 
 function renderBadges(source, quality) {
@@ -41,8 +58,23 @@ function renderBadges(source, quality) {
     const qualityLabel = getQualityLabel(quality);
     const isHiRes = qualityLabel === 'Hi-Res';
     const sourceBadge = platformName ? `<span class="source-badge">${escapeHtml(platformName)}</span>` : '';
-    const qualityBadge = `<span class="quality-badge${isHiRes ? ' hi-res' : ''}">${escapeHtml(qualityLabel)}</span>`;
+    const qualityBadge = qualityLabel ? `<span class="quality-badge${isHiRes ? ' hi-res' : ''}">${escapeHtml(qualityLabel)}</span>` : '';
     return `<div class="result-badges">${sourceBadge}${qualityBadge}</div>`;
+}
+
+function backToHotSearch() {
+    // 隐藏搜索结果，恢复热门歌曲网格
+    document.getElementById('resultSection').style.display = 'none';
+    const hotCard = document.getElementById('hotSearchCard');
+    if (hotCard) { hotCard.style.opacity = ''; hotCard.style.maxHeight = ''; hotCard.style.overflow = ''; hotCard.style.marginTop = ''; hotCard.style.paddingTop = ''; hotCard.style.transition = ''; }
+    // 清空搜索状态
+    searchResults = [];
+    totalResults = 0;
+    currentKeyword = '';
+    selectedSongs.clear();
+    updateSelectedCount();
+    document.getElementById('keyword').value = '';
+    document.getElementById('keyword').focus();
 }
 
 // ============ 工具函数 ============
@@ -661,7 +693,7 @@ function renderResults() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, 'flac');
+        const badgesHtml = renderBadges(song.source, getBestQuality(song));
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <div class="col-index">
@@ -1806,7 +1838,7 @@ function slRenderDetailList() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (currentPlaySong && getSongKey(song) === getSongKey(currentPlaySong) && isPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, 'flac');
+        const badgesHtml = renderBadges(song.source, getBestQuality(song));
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <div class="col-index">
@@ -2221,7 +2253,7 @@ function srRenderResults() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, 'flac');
+        const badgesHtml = renderBadges(song.source, getBestQuality(song));
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <div class="col-index">
@@ -2776,7 +2808,7 @@ function lbRenderList() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (lbCurrentSong && getSongKey(song) === getSongKey(lbCurrentSong) && lbIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, 'flac');
+        const badgesHtml = renderBadges(song.source, getBestQuality(song));
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
                 <div class="col-index">
@@ -2997,3 +3029,4 @@ window.nextCurrentPlayer = nextCurrentPlayer;
 window.seekPlayerProgress = seekPlayerProgress;
 window.onVolumeChange = onVolumeChange;
 window.onHotSearchItemClick = onHotSearchItemClick;
+window.backToHotSearch = backToHotSearch;
