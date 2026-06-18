@@ -661,23 +661,27 @@ function renderResults() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, '320k');
-        const albumHtml = song.album ? `<div class="result-album">${escapeHtml(song.album)}</div>` : '';
+        const badgesHtml = renderBadges(song.source, 'flac');
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
-                <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
-                    onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
-                <div class="result-thumb">${imgHtml}</div>
-                <div class="result-info">
-                    <div class="result-name">${escapeHtml(song.name)}</div>
-                    <div class="result-meta">${escapeHtml(song.singer || '')}</div>
-                    ${albumHtml}
+                <div class="col-index">
+                    <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
+                        onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer">
                 </div>
-                ${badgesHtml}
-                <div class="result-duration">${formatDuration(song.duration)}</div>
-                <button class="play-btn sr-play-btn" data-index="${i}" title="播放">
-                    <span class="material-symbols-outlined">${playIcon}</span>
-                </button>
+                <div class="col-title">
+                    <div class="result-thumb">${imgHtml}</div>
+                    <div class="result-title-wrap">
+                        <div class="result-name">${escapeHtml(song.name)}${badgesHtml}</div>
+                    </div>
+                </div>
+                <div class="col-artist">${escapeHtml(song.singer || '')}</div>
+                <div class="col-album">${escapeHtml(song.album || '')}</div>
+                <div class="col-duration">${formatDuration(song.duration)}</div>
+                <div class="col-actions">
+                    <button class="play-btn sr-play-btn" data-index="${i}" title="播放">
+                        <span class="material-symbols-outlined">${playIcon}</span>
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
@@ -909,7 +913,7 @@ async function importSelectedSongs() {
         if (!proceed) { switchToTab('sources'); return; }
     }
 
-    const quality = '320k';
+    const quality = 'flac';
     const playlistSelect = document.getElementById('playlistSelect');
     let playlistId = 0;
     let newPlaylistName = '';
@@ -1802,23 +1806,27 @@ function slRenderDetailList() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (currentPlaySong && getSongKey(song) === getSongKey(currentPlaySong) && isPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, '320k');
-        const albumHtml = song.album ? `<div class="result-album">${escapeHtml(song.album)}</div>` : '';
+        const badgesHtml = renderBadges(song.source, 'flac');
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
-                <input type="checkbox" class="sl-detail-checkbox" data-index="${i}" ${checked}
-                    onchange="slOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
-                <div class="result-thumb">${imgHtml}</div>
-                <div class="result-info">
-                    <div class="result-name">${escapeHtml(song.name)}</div>
-                    <div class="result-meta">${escapeHtml(song.singer || '')}</div>
-                    ${albumHtml}
+                <div class="col-index">
+                    <input type="checkbox" class="sl-detail-checkbox" data-index="${i}" ${checked}
+                        onchange="slOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer">
                 </div>
-                ${badgesHtml}
-                <div class="result-duration">${formatDuration(song.duration)}</div>
-                <button class="play-btn" onclick="slPlaySong(${i})" title="播放">
-                    <span class="material-symbols-outlined">${playIcon}</span>
-                </button>
+                <div class="col-title">
+                    <div class="result-thumb">${imgHtml}</div>
+                    <div class="result-title-wrap">
+                        <div class="result-name">${escapeHtml(song.name)}${badgesHtml}</div>
+                    </div>
+                </div>
+                <div class="col-artist">${escapeHtml(song.singer || '')}</div>
+                <div class="col-album">${escapeHtml(song.album || '')}</div>
+                <div class="col-duration">${formatDuration(song.duration)}</div>
+                <div class="col-actions">
+                    <button class="play-btn" onclick="slPlaySong(${i})" title="播放">
+                        <span class="material-symbols-outlined">${playIcon}</span>
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
@@ -2070,7 +2078,7 @@ async function srPlaySong(index) {
 
     srStopPlay();
 
-    const quality = '320k';
+    const quality = 'flac';
 
     const miniPlayer = document.getElementById('miniPlayer');
     const playerLoading = document.getElementById('playerLoading');
@@ -2213,23 +2221,27 @@ function srRenderResults() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (srCurrentSong && getSongKey(song) === getSongKey(srCurrentSong) && srIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, '320k');
-        const albumHtml = song.album ? `<div class="result-album">${escapeHtml(song.album)}</div>` : '';
+        const badgesHtml = renderBadges(song.source, 'flac');
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
-                <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
-                    onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
-                <div class="result-thumb">${imgHtml}</div>
-                <div class="result-info">
-                    <div class="result-name">${escapeHtml(song.name)}</div>
-                    <div class="result-meta">${escapeHtml(song.singer || '')}</div>
-                    ${albumHtml}
+                <div class="col-index">
+                    <input type="checkbox" class="result-checkbox" data-index="${i}" ${checked}
+                        onchange="onSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer">
                 </div>
-                ${badgesHtml}
-                <div class="result-duration">${formatDuration(song.duration)}</div>
-                <button class="play-btn sr-play-btn" data-index="${i}" title="播放">
-                    <span class="material-symbols-outlined">${playIcon}</span>
-                </button>
+                <div class="col-title">
+                    <div class="result-thumb">${imgHtml}</div>
+                    <div class="result-title-wrap">
+                        <div class="result-name">${escapeHtml(song.name)}${badgesHtml}</div>
+                    </div>
+                </div>
+                <div class="col-artist">${escapeHtml(song.singer || '')}</div>
+                <div class="col-album">${escapeHtml(song.album || '')}</div>
+                <div class="col-duration">${formatDuration(song.duration)}</div>
+                <div class="col-actions">
+                    <button class="play-btn sr-play-btn" data-index="${i}" title="播放">
+                        <span class="material-symbols-outlined">${playIcon}</span>
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
@@ -2274,7 +2286,7 @@ async function lbPlaySong(index) {
 
     lbStopPlay();
 
-    const quality = '320k';
+    const quality = 'flac';
 
     const miniPlayer = document.getElementById('miniPlayer');
     const playerLoading = document.getElementById('playerLoading');
@@ -2418,7 +2430,7 @@ async function slPlaySong(index) {
     // 停止当前播放
     slStopPlay();
 
-    const quality = '320k';
+    const quality = 'flac';
 
     // 显示加载状态
     const miniPlayer = document.getElementById('miniPlayer');
@@ -2580,7 +2592,7 @@ async function slImportSelectedSongs() {
         if (!proceed) { switchToTab('sources'); return; }
     }
 
-    const quality = '320k';
+    const quality = 'flac';
     const playlistSelect = document.getElementById('slPlaylistSelect');
     let playlistId = 0;
     let newPlaylistName = '';
@@ -2764,23 +2776,27 @@ function lbRenderList() {
             ? `<img src="${escapeHtml(song.img)}" alt="" loading="lazy" onerror="this.parentNode.innerHTML='<span class=\\'material-symbols-outlined\\'>music_note</span>'">`
             : '<span class="material-symbols-outlined">music_note</span>';
         const playIcon = (lbCurrentSong && getSongKey(song) === getSongKey(lbCurrentSong) && lbIsPlaying) ? 'pause' : 'play_arrow';
-        const badgesHtml = renderBadges(song.source, '320k');
-        const albumHtml = song.album ? `<div class="result-album">${escapeHtml(song.album)}</div>` : '';
+        const badgesHtml = renderBadges(song.source, 'flac');
         return `
             <div class="result-item${selectedClass}${playingClass} animate-slide-up" data-index="${i}" style="animation-delay:${Math.min(i, 15) * 0.03}s">
-                <input type="checkbox" class="lb-checkbox" data-index="${i}" ${checked}
-                    onchange="lbOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer;flex-shrink:0">
-                <div class="result-thumb">${imgHtml}</div>
-                <div class="result-info">
-                    <div class="result-name">${escapeHtml(song.name)}</div>
-                    <div class="result-meta">${escapeHtml(song.singer || '')}</div>
-                    ${albumHtml}
+                <div class="col-index">
+                    <input type="checkbox" class="lb-checkbox" data-index="${i}" ${checked}
+                        onchange="lbOnSongCheckChanged(${i}, this.checked)" style="accent-color:var(--md-primary);width:18px;height:18px;cursor:pointer">
                 </div>
-                ${badgesHtml}
-                <div class="result-duration">${formatDuration(song.duration)}</div>
-                <button class="play-btn lb-play-btn" data-index="${i}" title="播放">
-                    <span class="material-symbols-outlined">${playIcon}</span>
-                </button>
+                <div class="col-title">
+                    <div class="result-thumb">${imgHtml}</div>
+                    <div class="result-title-wrap">
+                        <div class="result-name">${escapeHtml(song.name)}${badgesHtml}</div>
+                    </div>
+                </div>
+                <div class="col-artist">${escapeHtml(song.singer || '')}</div>
+                <div class="col-album">${escapeHtml(song.album || '')}</div>
+                <div class="col-duration">${formatDuration(song.duration)}</div>
+                <div class="col-actions">
+                    <button class="play-btn lb-play-btn" data-index="${i}" title="播放">
+                        <span class="material-symbols-outlined">${playIcon}</span>
+                    </button>
+                </div>
             </div>
         `;
     }).join('');
@@ -2898,7 +2914,7 @@ async function lbImportSelectedSongs() {
         if (!proceed) { switchToTab('sources'); return; }
     }
 
-    const quality = '320k';
+    const quality = 'flac';
     const playlistSelect = document.getElementById('lbPlaylistSelect');
     let playlistId = 0;
     let newPlaylistName = '';
