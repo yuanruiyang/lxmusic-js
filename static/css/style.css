@@ -809,6 +809,127 @@ body {
 
 .segment-btn:hover:not(.active) { background: var(--md-primary-container); color: var(--md-primary); }
 
+/* ─── Sort Chips in Top Bar ─── */
+.sl-sort-chips {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    flex-shrink: 1;
+    min-width: 0;
+    scrollbar-width: none;
+}
+
+.sl-sort-chips::-webkit-scrollbar { display: none; }
+
+.sl-sort-chips .tag-chip {
+    padding: 5px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* ─── Filter Button ─── */
+.sl-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: var(--md-radius-full);
+    border: 1px solid rgba(124, 91, 245, 0.2);
+    background: rgba(124, 91, 245, 0.06);
+    color: var(--md-primary);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all .25s var(--spring);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.sl-filter-btn:hover {
+    background: rgba(124, 91, 245, 0.12);
+    border-color: rgba(124, 91, 245, 0.35);
+}
+
+.sl-filter-btn .material-symbols-outlined { font-size: 16px; }
+
+/* ─── Tag Drawer ─── */
+.sl-drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s var(--spring);
+}
+
+.sl-drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.sl-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 360px;
+    max-width: 85vw;
+    background: var(--md-surface);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform .35s var(--spring);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+    border-radius: 16px 0 0 16px;
+}
+
+.sl-drawer.open {
+    transform: translateX(0);
+}
+
+.sl-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
+}
+
+.sl-drawer-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+}
+
+.sl-drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 20px 20px;
+}
+
+.sl-drawer-body .tag-group-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--md-on-surface);
+    padding: 12px 0 6px;
+}
+
+.sl-drawer-body .tag-group-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 4px;
+}
+
+.sl-drawer-body .tag-chip {
+    padding: 7px 16px;
+    font-size: 13px;
+}
+
 /* ─── Songlist List Toolbar ─── */
 .sl-list-toolbar {
     display: flex;
