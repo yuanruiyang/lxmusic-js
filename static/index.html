@@ -216,13 +216,14 @@
             <div class="card">
                 <div class="card-header">歌单</div>
                 <div class="search-row">
-                    <select id="slPlatformSelect" class="select-field" style="width:150px;flex-shrink:0">
+                    <select id="slPlatformSelect" class="select-field" style="width:80px;flex-shrink:0">
                         <option value="kg">kg</option>
                         <option value="kw">kw</option>
                         <option value="tx">tx</option>
                         <option value="wy">wy</option>
                         <option value="mg">mg</option>
                     </select>
+                    <div id="slSortChips" class="sl-sort-chips"></div>
                     <div class="segment-group">
                         <button class="segment-btn active" data-mode="recommend">推荐</button>
                         <button class="segment-btn" data-mode="search">搜索</button>
@@ -237,21 +238,23 @@
                         <input type="text" id="slParseInput" class="text-field" placeholder="粘贴歌单链接...">
                     </div>
                     <button id="slActionBtn" class="btn-filled" style="display:none">搜索</button>
+                    <button id="slFilterBtn" class="btn-outlined sl-filter-btn" onclick="slOpenTagDrawer()" title="全部分类">
+                        <span class="material-symbols-outlined">filter_list</span>
+                        全部分类
+                    </button>
                 </div>
             </div>
 
-            <!-- 标签筛选卡片 -->
-            <div class="card" id="slTagCard" style="display:none">
-                <div class="card-header">
-                    分类标签
-                    <button class="btn-icon" id="slTagToggleBtn" onclick="slToggleTagCard()" title="折叠/展开">
-                        <span class="material-symbols-outlined">expand_less</span>
+            <!-- 标签筛选侧边抽屉 -->
+            <div id="slTagDrawerOverlay" class="sl-drawer-overlay" onclick="slCloseTagDrawer()"></div>
+            <div id="slTagDrawer" class="sl-drawer">
+                <div class="sl-drawer-header">
+                    <span class="sl-drawer-title">选择分类</span>
+                    <button class="btn-icon" onclick="slCloseTagDrawer()" title="关闭">
+                        <span class="material-symbols-outlined">close</span>
                     </button>
                 </div>
-                <div id="slTagCardBody">
-                    <div id="slSortChips" class="tag-chips"></div>
-                    <div id="slTagChips" class="tag-chips-container"></div>
-                </div>
+                <div id="slTagChips" class="sl-drawer-body"></div>
             </div>
 
             <!-- 歌单列表卡片 -->
