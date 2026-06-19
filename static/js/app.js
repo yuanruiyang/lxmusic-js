@@ -1412,6 +1412,21 @@ function initSonglistTab() {
         if (e.key === 'Enter') slDoAction();
     });
 
+    // 歌单列表内搜索
+    const gridSearchInput = document.getElementById('slGridSearchInput');
+    if (gridSearchInput) {
+        gridSearchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const keyword = this.value.trim();
+                if (keyword) {
+                    switchSonglistMode('search');
+                    document.getElementById('slSearchInput').value = keyword;
+                    slSearchSonglist(keyword, 1);
+                }
+            }
+        });
+    }
+
     // 全选
     document.getElementById('slSelectAll').addEventListener('change', slToggleSelectAll);
 
@@ -1677,14 +1692,25 @@ function slRenderGrid() {
         const img = item.img
             ? `<img class="songlist-cover" src="${escapeHtml(item.img)}" alt="" loading="lazy" onerror="this.style.display='none'">`
             : '<div class="songlist-cover" style="display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:40px;color:var(--md-outline)">queue_music</span></div>';
+        const playCount = item.play_count || item.playCount || '';
+        const songCount = item.song_count || item.total || item.count || '';
+        const overlayHtml = playCount
+            ? `<div class="songlist-card-overlay">
+                   <span><span class="material-symbols-outlined">headphones</span>${escapeHtml(playCount)}</span>
+               </div>`
+            : '';
         return `
             <div class="songlist-card animate-slide-up" data-index="${i}" onclick="slOpenDetail('${escapeHtml(item.id)}')" style="animation-delay:${Math.min(i, 12) * 0.05}s">
-                ${img}
+                <div class="songlist-cover-wrap">
+                    ${img}
+                    ${overlayHtml}
+                </div>
                 <div class="songlist-card-body">
                     <div class="songlist-name">${escapeHtml(item.name)}</div>
-                    <div class="songlist-meta">
-                        ${item.play_count || item.playCount ? `<span class="songlist-play-count"><span class="material-symbols-outlined">play_arrow</span>${escapeHtml(item.play_count || item.playCount)}</span>` : ''}
-                        ${item.author ? `<span>${escapeHtml(item.author)}</span>` : ''}
+                    ${item.author ? `<div class="songlist-card-author">${escapeHtml(item.author)}</div>` : ''}
+                    <div class="songlist-card-stats">
+                        ${songCount ? `<span><span class="material-symbols-outlined" style="font-size:13px">music_note</span>${escapeHtml(songCount)}</span>` : ''}
+                        ${playCount ? `<span><span class="material-symbols-outlined" style="font-size:13px">headphones</span>${escapeHtml(playCount)}</span>` : ''}
                     </div>
                 </div>
             </div>
@@ -1782,17 +1808,24 @@ function slShowDetail() {
     if (slDetailInfo && (slDetailInfo.name || slDetailInfo.img)) {
         const img = slDetailInfo.img
             ? `<img class="songlist-info-cover" src="${escapeHtml(slDetailInfo.img)}" alt="" onerror="this.style.display='none'">`
-            : '';
+            : '<div class="songlist-info-cover" style="display:flex;align-items:center;justify-content:center"><span class="material-symbols-outlined" style="font-size:48px;color:var(--md-outline)">queue_music</span></div>';
+        const playCount = slDetailInfo.play_count || slDetailInfo.playCount || '';
+        const songCount = slDetailInfo.song_count || slDetailInfo.total || slDetailInfo.count || (slDetailTotal > 0 ? slDetailTotal : '');
+        const createTime = slDetailInfo.create_time || slDetailInfo.createTime || '';
+        const descText = slDetailInfo.desc || slDetailInfo.description || '';
         infoEl.innerHTML = `
             ${img}
             <div class="songlist-info-detail">
                 <div class="songlist-info-name">${escapeHtml(slDetailInfo.name || '')}</div>
                 <div class="songlist-info-author">
                     ${slDetailInfo.author ? escapeHtml(slDetailInfo.author) : ''}
-                    ${slDetailInfo.play_count || slDetailInfo.playCount ? ' · ' + escapeHtml(slDetailInfo.play_count || slDetailInfo.playCount) + ' 播放' : ''}
-                    ${slDetailTotal > 0 ? ' · ' + slDetailTotal + ' 首歌曲' : ''}
+                    ${createTime ? ' · ' + escapeHtml(createTime) : ''}
                 </div>
-                ${slDetailInfo.desc ? `<div class="songlist-info-desc" onclick="this.classList.toggle('expanded')">${escapeHtml(slDetailInfo.desc)}</div>` : ''}
+                <div class="songlist-info-stats">
+                    ${songCount ? `<span><span class="material-symbols-outlined">music_note</span>${escapeHtml(songCount)} 首</span>` : ''}
+                    ${playCount ? `<span><span class="material-symbols-outlined">headphones</span>${escapeHtml(playCount)}</span>` : ''}
+                </div>
+                ${descText ? `<div class="songlist-info-desc" onclick="this.classList.toggle('expanded')">${escapeHtml(descText)}<span class="expand-link">展开全部 ▼</span></div>` : ''}
             </div>
         `;
     } else {
