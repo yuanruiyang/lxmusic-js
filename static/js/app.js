@@ -3045,7 +3045,8 @@ async function lbImportSelectedSongs() {
 // 构建工具 (esbuild format:'iife') 会将所有代码包裹在 IIFE 中，
 // 导致 inline onclick/onchange 无法访问函数。显式挂载到 window 解决此问题。
 window.switchToTab = switchToTab;
-window.slToggleTagCard = slToggleTagCard;
+window.slOpenTagDrawer = slOpenTagDrawer;
+window.slCloseTagDrawer = slCloseTagDrawer;
 window.slBackToList = slBackToList;
 window.lbToggleBoardsCard = lbToggleBoardsCard;
 window.lbBackToBoards = lbBackToBoards;
