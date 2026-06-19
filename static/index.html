@@ -256,23 +256,38 @@
 
             <!-- 歌单列表卡片 -->
             <div class="card" id="slListCard" style="display:none">
-                <div class="card-header">
-                    歌单列表
-                    <span id="slListCount" class="chip"></span>
+                <div class="sl-list-toolbar">
+                    <span id="slListCount" class="sl-list-count"></span>
+                    <div class="sl-list-search">
+                        <span class="material-symbols-outlined sl-list-search-icon">search</span>
+                        <input type="text" id="slGridSearchInput" class="sl-list-search-input" placeholder="搜索歌单...">
+                    </div>
+                    <button class="btn-icon sl-list-filter-btn" title="筛选">
+                        <span class="material-symbols-outlined">filter_list</span>
+                    </button>
                 </div>
-                <div class="pagination" id="slPagination"></div>
                 <div id="slGrid" class="songlist-grid"></div>
+                <div class="pagination" id="slPagination"></div>
             </div>
 
             <!-- 歌单详情卡片 -->
             <div class="card" id="slDetailCard" style="display:none">
-                <div class="card-header">
-                    <button class="btn-icon" onclick="slBackToList()" title="返回">
+                <!-- 详情头部：返回按钮 + 封面信息 + 操作按钮 -->
+                <div class="sl-detail-header">
+                    <button class="btn-icon sl-back-btn" onclick="slBackToList()" title="返回">
                         <span class="material-symbols-outlined">arrow_back</span>
                     </button>
-                    歌单详情
+                    <div id="slDetailInfo" class="songlist-info"></div>
+                    <div class="sl-detail-actions">
+                        <button id="slPlayAllBtn" class="btn-play-all" title="播放全部">
+                            <span class="material-symbols-outlined">play_arrow</span>
+                            播放全部
+                        </button>
+                        <button class="btn-icon btn-fav" title="收藏">
+                            <span class="material-symbols-outlined">favorite_border</span>
+                        </button>
+                    </div>
                 </div>
-                <div id="slDetailInfo" class="songlist-info"></div>
                 <!-- 操作工具栏 -->
                 <div class="toolbar">
                     <select id="slPlaylistSelect" class="select-field select-small">
@@ -289,10 +304,6 @@
                     <button id="slImportBtn" class="btn-filled" disabled>
                         导入选中
                         <span id="slSelectedBadge" class="badge">0</span>
-                    </button>
-                    <button id="slPlayAllBtn" class="btn-outlined" title="播放全部">
-                        <span class="material-symbols-outlined">play_circle</span>
-                        播放全部
                     </button>
                     <button id="slShuffleBtn" class="btn-outlined" title="随机播放">
                         <span class="material-symbols-outlined">shuffle</span>
