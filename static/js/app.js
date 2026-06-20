@@ -2163,17 +2163,26 @@ async function srPlaySong(index) {
     document.getElementById('playerSinger').textContent = song.singer || '';
 
     try {
+        const songInfo = {
+            source: song.source,
+            songmid: song.songmid || song.musicId,
+            musicId: song.musicId || song.songmid,
+            name: song.name,
+            singer: song.singer,
+            album: song.album || '',
+            duration: song.duration,
+        };
+        if (song.hash) songInfo.hash = song.hash;
+        if (song.albumId || song.album_id) songInfo.albumId = song.albumId || song.album_id;
+        if (song.strMediaMid) songInfo.strMediaMid = song.strMediaMid;
+        if (song.albumMid) songInfo.albumMid = song.albumMid;
+        if (song.copyrightId) songInfo.copyrightId = song.copyrightId;
+
         const resp = await apiPost('/music/url', {
             source_data: {
                 platform: song.source,
                 quality: quality,
-                songInfo: {
-                    source: song.source,
-                    songmid: song.songmid || song.musicId,
-                    albumId: song.albumId || song.album_id,
-                    duration: song.duration,
-                    hash: song.hash || ''
-                }
+                songInfo: songInfo
             }
         });
 
@@ -2372,17 +2381,26 @@ async function lbPlaySong(index) {
     document.getElementById('playerSinger').textContent = song.singer || '';
 
     try {
+        const songInfo = {
+            source: song.source,
+            songmid: song.songmid || song.musicId,
+            musicId: song.musicId || song.songmid,
+            name: song.name,
+            singer: song.singer,
+            album: song.album || '',
+            duration: song.duration,
+        };
+        if (song.hash) songInfo.hash = song.hash;
+        if (song.albumId || song.album_id) songInfo.albumId = song.albumId || song.album_id;
+        if (song.strMediaMid) songInfo.strMediaMid = song.strMediaMid;
+        if (song.albumMid) songInfo.albumMid = song.albumMid;
+        if (song.copyrightId) songInfo.copyrightId = song.copyrightId;
+
         const resp = await apiPost('/music/url', {
             source_data: {
                 platform: song.source,
                 quality: quality,
-                songInfo: {
-                    source: song.source,
-                    songmid: song.songmid || song.musicId,
-                    albumId: song.albumId || song.album_id,
-                    duration: song.duration,
-                    hash: song.hash || ''
-                }
+                songInfo: songInfo
             }
         });
 
@@ -2519,20 +2537,26 @@ async function slPlaySong(index) {
 
     try {
         // 调用 /api/music/url 获取播放 URL
+        const songInfo = {
+            source: song.source,
+            songmid: song.songmid || song.musicId,
+            musicId: song.musicId || song.songmid,
+            name: song.name,
+            singer: song.singer,
+            album: song.album || '',
+            duration: song.duration,
+        };
+        if (song.hash) songInfo.hash = song.hash;
+        if (song.albumId || song.album_id) songInfo.albumId = song.albumId || song.album_id;
+        if (song.strMediaMid) songInfo.strMediaMid = song.strMediaMid;
+        if (song.albumMid) songInfo.albumMid = song.albumMid;
+        if (song.copyrightId) songInfo.copyrightId = song.copyrightId;
+
         const resp = await apiPost('/music/url', {
             source_data: {
                 platform: song.source,
                 quality: quality,
-                songInfo: {
-                    source: song.source,
-                    songmid: song.songmid || song.musicId,
-                    musicId: song.musicId || song.songmid,
-                    name: song.name,
-                    singer: song.singer,
-                    album: song.album,
-                    duration: song.duration,
-                    hash: song.hash || ''
-                }
+                songInfo: songInfo
             }
         });
 
