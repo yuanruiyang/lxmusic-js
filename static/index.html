@@ -456,34 +456,104 @@
             <div id="playerProgressBarFill" class="player-progress-bar-fill"></div>
         </div>
         <div class="player-body">
-            <img id="playerCover" class="player-cover" src="" alt="">
-            <div class="player-info">
-                <div id="playerName" class="player-name"></div>
+            <img id="playerCover" class="player-cover" src="" alt="" onclick="toggleFullPlayer()">
+            <div class="player-info" onclick="toggleFullPlayer()">
+                <div class="player-name-row">
+                    <span id="playerName" class="player-name"></span>
+                    <span id="playerBadges" class="player-badges"></span>
+                </div>
                 <div id="playerSinger" class="player-singer"></div>
+                <div id="playerStatus" class="player-status"></div>
             </div>
-            <div class="player-time" id="playerTimeCurrent">0:00</div>
-            <div class="player-controls-enhanced">
-                <button class="player-btn" onclick="prevCurrentPlayer()" title="上一首">
-                    <span class="material-symbols-outlined">skip_previous</span>
+            <div class="player-center">
+                <div class="player-time-row">
+                    <span class="player-time" id="playerTimeCurrent">0:00</span>
+                    <span class="player-time player-time-total" id="playerTimeTotal">0:00</span>
+                </div>
+                <div class="player-controls-enhanced">
+                    <button id="playerRepeatBtn" class="player-btn player-btn-icon" onclick="toggleRepeatMode()" title="循环模式">
+                        <span class="material-symbols-outlined">repeat</span>
+                    </button>
+                    <button class="player-btn player-btn-icon" onclick="prevCurrentPlayer()" title="上一首">
+                        <span class="material-symbols-outlined">skip_previous</span>
+                    </button>
+                    <button id="playerPlayBtn" class="player-btn player-btn-primary" onclick="toggleCurrentPlayer()">
+                        <span class="material-symbols-outlined">play_arrow</span>
+                    </button>
+                    <button class="player-btn player-btn-icon" onclick="nextCurrentPlayer()" title="下一首">
+                        <span class="material-symbols-outlined">skip_next</span>
+                    </button>
+                    <button id="playerSpeedBtn" class="player-btn player-btn-text" onclick="cycleSpeed()" title="播放速度">1.0x</button>
+                </div>
+            </div>
+            <div class="player-right">
+                <button id="playerLyricBtn" class="player-btn player-btn-icon" onclick="toggleFullPlayer()" title="歌词">
+                    <span class="material-symbols-outlined">lyrics</span>
                 </button>
-                <button id="playerPlayBtn" class="player-btn player-btn-primary" onclick="toggleCurrentPlayer()">
-                    <span class="material-symbols-outlined">play_arrow</span>
-                </button>
-                <button class="player-btn" onclick="nextCurrentPlayer()" title="下一首">
-                    <span class="material-symbols-outlined">skip_next</span>
+                <div class="player-volume">
+                    <span class="material-symbols-outlined" id="playerVolumeIcon">volume_up</span>
+                    <input type="range" id="playerVolume" class="volume-slider" min="0" max="100" value="100" oninput="onVolumeChange(this.value)">
+                </div>
+                <button class="player-btn player-btn-icon player-btn-close" onclick="stopCurrentPlayer()" title="关闭">
+                    <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <div class="player-time" id="playerTimeTotal">0:00</div>
-            <div class="player-volume">
-                <span class="material-symbols-outlined">volume_up</span>
-                <input type="range" id="playerVolume" class="volume-slider" min="0" max="100" value="100" oninput="onVolumeChange(this.value)">
-            </div>
-            <button class="player-btn player-btn-sm" onclick="stopCurrentPlayer()" title="关闭">
-                <span class="material-symbols-outlined">close</span>
-            </button>
         </div>
         <div id="playerLoading" class="player-loading" style="display:none">
             <span class="spinner"></span>
+        </div>
+    </div>
+
+    <!-- 全屏播放器 -->
+    <div id="fullPlayer" class="full-player" style="display:none" onclick="onFullPlayerBackdropClick(event)">
+        <div class="fp-container">
+            <button class="fp-close-btn" onclick="toggleFullPlayer()" title="收起">
+                <span class="material-symbols-outlined">keyboard_arrow_down</span>
+            </button>
+            <div class="fp-label">NOW PLAYING</div>
+            <div class="fp-layout">
+                <div class="fp-left">
+                    <img id="fpCover" class="fp-cover" src="" alt="">
+                    <div class="fp-song-info">
+                        <div id="fpName" class="fp-name"></div>
+                        <div id="fpSinger" class="fp-singer"></div>
+                        <div id="fpBadges" class="fp-badges"></div>
+                    </div>
+                </div>
+                <div class="fp-right">
+                    <div id="fpLyrics" class="fp-lyrics">
+                        <div class="fp-lyrics-placeholder">歌词加载中...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="fp-bottom">
+                <div class="fp-progress-row">
+                    <span class="player-time" id="fpTimeCurrent">0:00</span>
+                    <div class="player-progress-bar-linear fp-progress-bar" onclick="seekPlayerProgress(event)">
+                        <div id="fpProgressBarFill" class="player-progress-bar-fill"></div>
+                    </div>
+                    <span class="player-time" id="fpTimeTotal">0:00</span>
+                </div>
+                <div class="fp-controls">
+                    <button id="fpRepeatBtn" class="player-btn player-btn-icon" onclick="toggleRepeatMode()" title="循环模式">
+                        <span class="material-symbols-outlined">repeat</span>
+                    </button>
+                    <button class="player-btn player-btn-icon" onclick="prevCurrentPlayer()" title="上一首">
+                        <span class="material-symbols-outlined">skip_previous</span>
+                    </button>
+                    <button id="fpPlayBtn" class="player-btn player-btn-primary fp-play-btn" onclick="toggleCurrentPlayer()">
+                        <span class="material-symbols-outlined">play_arrow</span>
+                    </button>
+                    <button class="player-btn player-btn-icon" onclick="nextCurrentPlayer()" title="下一首">
+                        <span class="material-symbols-outlined">skip_next</span>
+                    </button>
+                    <button id="fpSpeedBtn" class="player-btn player-btn-text" onclick="cycleSpeed()" title="播放速度">1.0x</button>
+                </div>
+                <div class="fp-volume-row">
+                    <span class="material-symbols-outlined">volume_up</span>
+                    <input type="range" class="volume-slider fp-volume-slider" min="0" max="100" value="100" oninput="onVolumeChange(this.value)">
+                </div>
+            </div>
         </div>
     </div>
 
