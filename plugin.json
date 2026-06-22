@@ -6,6 +6,7 @@
   "author": "LX Team",
   "homepage": "https://github.com/yuanruiyang/lxmusic-js",
   "license": "Apache-2.0",
+  "icon": "icon.svg",
   "entryPath": "lxmusic",
   "main": "main.js",
   "minHostVersion": "2.0.0",
