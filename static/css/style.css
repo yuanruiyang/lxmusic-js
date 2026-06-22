@@ -1565,6 +1565,7 @@ body {
     max-width: 960px; width: 100%; margin: 0 auto;
     padding: 20px 32px;
     position: relative;
+    min-height: 0; overflow: hidden;
 }
 
 .fp-close-btn {
@@ -1915,12 +1916,15 @@ body {
     .player-status { display: none; }
     .player-btn-text { min-width: 32px; font-size: 11px; }
     /* Full player responsive */
-    .fp-layout { flex-direction: column; align-items: center; gap: 16px; }
-    .fp-left { width: 180px; }
-    .fp-cover { width: 180px; height: 180px; }
-    .fp-right { width: 100%; }
+    .fp-layout { flex-direction: column; align-items: center; gap: 12px; overflow-y: auto; }
+    .fp-left { width: 140px; flex-shrink: 0; gap: 8px; }
+    .fp-cover { width: 140px; height: 140px; }
+    .fp-name { font-size: 16px; }
+    .fp-right { width: 100%; min-height: 120px; flex: 1; }
     .fp-lyric-line { font-size: 14px; padding: 6px 8px; }
     .fp-container { padding: 16px; }
+    .fp-label { margin-bottom: 8px; }
+    .fp-bottom { padding: 10px 0 4px; }
     /* Table columns responsive */
     .col-album { display: none; }
     .col-artist { flex: 0 0 80px; }
